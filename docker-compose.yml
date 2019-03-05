@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: postgres:10
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  api:
+    build: ./api
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/django_mummy:/usr/src/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  web:
+    build: ./web
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
+    volumes:
+      - ./web/vue-wolf:/usr/src/app
+    command: npm run dev
+
+volumes:
+  dbdata:
