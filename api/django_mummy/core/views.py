@@ -1,15 +1,16 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import list_route
-from .models import Todo, Investor
-from .serializers import TodoSerializer,InvestorSerializer,MummySerializer
-
+from .models import Investor
+from .serializers import InvestorSerializer,MummySerializer
+import random
+from django.db.models import Avg
+from django.db.models import Q
 
 class APIRoot(APIView):
     """
@@ -17,7 +18,6 @@ class APIRoot(APIView):
     """
     def get(self, request):
         return Response({
-            'todos': reverse('todo-list-view', request=request),
             'investors': reverse('investors-list-view', request=request),
             'dashboard': reverse('dashboard-view', request=request)
         })
@@ -80,6 +80,18 @@ class DashboardItem(APIView):
     def get(self, request):
         queryset = Investor.objects.filter(parent=None)
         serializer = MummySerializer(queryset, many=True)
-        return Response({serializer.data})
+        newCandidates = []
+        for x in range(0, 10):
+            newCandidates.append(Investor(innocence = random.random(),experience = random.random(),
+                                          charisma=random.random()))
+        candidates = InvestorSerializer(newCandidates, many=True)
+        return Response({
+            'totalPopulation': Investor.objects.count() + 10,
+            'totalMembers': Investor.objects.count(),
+            'mummyMoney': Investor.objects.get(parent=None).money,
+            'avgMoney': Investor.objects.all().filter(~Q(parent=None)).aggregate(Avg('money')),
+            'tree':  serializer.data,
+            'candidates': candidates.data
+        })
 
 
