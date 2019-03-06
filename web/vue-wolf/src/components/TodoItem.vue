@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     toggleStatus: function () {
-      axios.patch('http://localhost:8000/todos/'+this.id+'/', {
+      axios.patch('http://localhost:8000/dashboard/'+this.id+'/', {
         status: this.isDone
       })
         .then(response => {
@@ -62,7 +62,7 @@ export default {
         })
     },
     removeTodo: function () {
-      axios.delete('http://localhost:8000/todos/'+this.id+'/')
+      axios.delete('http://localhost:8000/dashboard/'+this.id+'/')
       this.$emit('remove', this.id)
     }
   },
