@@ -24,7 +24,7 @@
     },
     methods: {
       getInfo: function () {
-        axios.get('http://localhost:8000/dashboard/')
+        axios.get('http://localhost:8000/dashboard/?format=json')
           .then(response => {
             this.info = response.data
           })

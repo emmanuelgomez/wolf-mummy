@@ -10,7 +10,7 @@ export default new Router({
     {
       path: '/',
       name: 'dashboard',
-      component: TodoList
+      component: Dashboard
     }
   ]
 })
