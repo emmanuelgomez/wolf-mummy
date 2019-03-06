@@ -6,8 +6,8 @@ from rest_framework.reverse import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from .models import Todo
-from .serializers import TodoSerializer
+from .models import Todo, Investor
+from .serializers import TodoSerializer,InvestorSerializer
 
 
 class APIRoot(APIView):
@@ -16,8 +16,26 @@ class APIRoot(APIView):
     """
     def get(self, request):
         return Response({
-            'todos': reverse('todo-list-view', request=request)
+            'todos': reverse('todo-list-view', request=request),
+            'investors': reverse('investors-list-view', request=request)
         })
+
+class InvestorList(APIView):
+    """
+    List all investors or create a new one.
+    """
+    def get(self, request, format=None):
+        investors = Investor.objects.all()
+        serializer = InvestorSerializer(investors, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = InvestorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class TodoList(APIView):
