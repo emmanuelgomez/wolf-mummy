@@ -1,5 +1,4 @@
-# django-todo
-This is a simple to-do list application divided in two parts: an API and a Web Application client.
+# django-mummy
 
 ---
 
