@@ -13,7 +13,7 @@ services:
       - "8000:8000"
     volumes:
       - ./api/django_mummy:/usr/src/app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "while true; do python manage.py runserver 0.0.0.0:8000; sleep 2; done"
 
   web:
     build: ./web
