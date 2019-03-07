@@ -48,7 +48,7 @@ export default {
     return {
       id: this.todo.id,
       isDone: this.todo.status,
-      text: this.todo.text,
+      text: this.todo.money,
       lastModified: this.todo.last_modified
     }
   },
