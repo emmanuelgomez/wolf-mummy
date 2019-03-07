@@ -28,3 +28,7 @@ api/django_mummy/core/migrations/__pycache__/0002_auto_20180227_1449\.cpython-36
 api/django_mummy/core/migrations/__pycache__/0003_investor\.cpython-36\.pyc
 
 api/django_mummy/core/migrations/0003_investor\.py
+
+api/django_mummy/core/migrations/__pycache__/0004_investor_iscandidate\.cpython-36\.pyc
+
+api/django_mummy/core/migrations/__pycache__/0005_remove_investor_iscandidate\.cpython-36\.pyc
