@@ -55,7 +55,7 @@ export default {
   components: { TodoItem },
   methods: {
     getTodos: function () {
-      axios.get('http://localhost:8000/todos/')
+      axios.get('http://localhost:8000/investors/')
         .then(response => {
           this.todos = response.data
         })

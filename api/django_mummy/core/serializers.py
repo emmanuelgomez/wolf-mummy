@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Investor
+from .models import Investor, Todo
+
+class TodoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = '__all__'
 
 class InvestorSerializer(serializers.ModelSerializer):
     class Meta:

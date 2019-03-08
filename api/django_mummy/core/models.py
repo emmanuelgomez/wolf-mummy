@@ -3,6 +3,15 @@ from django.utils.text import Truncator
 from django.core.validators import MaxValueValidator, MinValueValidator
 from math import log, floor
 
+class Todo(models.Model):
+    text = models.CharField(max_length=50, blank=False)
+    status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return Truncator(self.message).chars(20)
+
 class Investor(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children',on_delete=models.DO_NOTHING)
     innocence = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
