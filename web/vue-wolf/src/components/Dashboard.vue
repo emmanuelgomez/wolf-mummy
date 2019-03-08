@@ -2,9 +2,22 @@
 
   <div>
     <div class="col 4">
-      <h3>
+      <h5>
         Mummy Money
-      </h3>
+      </h5>
+      <a>{{this.dashboard.mummyMoney}}</a>
+      <h5>
+        AVG Money
+      </h5>
+      <a>{{this.dashboard.avgMoney.money__avg}}</a>
+      <h5>
+        Total Population
+      </h5>
+      <a>{{this.dashboard.totalPopulation}}</a>
+      <h5>
+        Total Members
+      </h5>
+      <a>{{this.dashboard.totalMembers}}</a>
     </div>
     <div class="col 8">
       <div class="row">
@@ -13,9 +26,6 @@
             Mummy Money
           </h3>
 
-          <h4>
-            Investors
-          </h4>
           <Table
             :investors="investors"
           >
@@ -44,7 +54,7 @@
       return {
         dashboard: [],
         investors: [],
-        candidates: []
+        candidates: [],
       }
     },
     components: {Table},
