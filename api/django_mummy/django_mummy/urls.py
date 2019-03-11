@@ -4,6 +4,7 @@ from core import views
 
 
 urlpatterns = [
+    path('simulation/', views.Simulation.as_view(), name='simulation-list-view'),
     path('investors/', views.InvestorList.as_view(), name='investors-list-view'),
     path('investors/<int:pk>/', views.InvestorItem.as_view()),
     path('dashboard/', views.DashboardItem.as_view(), name='dashboard-view'),

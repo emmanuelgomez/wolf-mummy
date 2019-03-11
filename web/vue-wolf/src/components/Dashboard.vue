@@ -2,6 +2,7 @@
 
   <div>
     <div class="col 4">
+      <button>Start Simulation</button>
       <h5>
         Mummy Money
       </h5>
@@ -23,7 +24,7 @@
       <div class="row">
         <ul class="col s8 offset-s2 card-panel grey lighten-5">
           <h3>
-            Mummy Money
+            Investors
           </h3>
 
           <Table

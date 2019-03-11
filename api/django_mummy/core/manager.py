@@ -1,14 +1,32 @@
 from .models import Investor
 import random
-
-class Manager:
+import threading
+import time
+class Manager(threading.Thread):
     members_leaving = []
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def Start(self,mummy):
+        w = threading.Thread(target=self.worker, args=(mummy,))
+        w.setDaemon(True)
+        w.start()
+
+    def worker(self,tree):
+
+        mummy = Investor.objects.select_related('parent').get(is_mummy=True)
+        while len(mummy.children) > 0:
+            self.IterateTree(tree)
+            self.RemoveMembersLeaving()
+            mummy = Investor.objects.select_related('parent').get(is_mummy=True)
+        return
 
     def IterateTree(self, tree):
 
         nodeStack = []
         nodeStack.append(tree)
-        while len(nodeStack) > 0 or len(nodeStack) > 7:
+        while len(nodeStack) > 0 :
             print(len(nodeStack))
             # Pop the top item from stack and print it
             node = nodeStack.pop()

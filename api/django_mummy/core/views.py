@@ -12,6 +12,7 @@ import random
 from django.db.models import Avg
 from django.db.models import Q
 from .manager import Manager
+import time
 
 class APIRoot(APIView):
     """
@@ -20,35 +21,57 @@ class APIRoot(APIView):
     def get(self, request):
         return Response({
             'investors': reverse('investors-list-view', request=request),
-            'dashboard': reverse('dashboard-view', request=request)
+            'dashboard': reverse('dashboard-view', request=request),
+            'simulation': reverse('simulation-view', request=request)
         })
+
+class Simulation(APIView):
+    def get(self, request, format=None):
+        try:
+            mummy = Investor.objects.select_related('parent').get(is_mummy=True)
+            mummy.delete()
+            mummy = Investor(innocence=random.random(), experience=random.random(), charisma=random.random(),
+                             is_mummy=True, money=0, week=0, parent=None)
+            mummy.save()
+
+        except :
+            mummy = Investor(innocence=random.random(), experience=random.random(),charisma=random.random(),
+                             is_mummy=True,money=0,week=0,parent=None)
+            mummy.save()
+        Investor.objects.all().filter(parent=None).filter(is_mummy=False).delete()
+        Manager.GenerateMummyInvestors(5, mummy)
+        Manager.GenerateInvestors(20)
+        Manager().Start(mummy)
+
+        return Response(status=status.HTTP_200_OK)
 
 class InvestorList(APIView):
     """
     List all investors or create a new one.
     """
     def get(self, request, format=None):
-        candidates = Investor.objects.all().filter(parent=None).filter(is_mummy=False)
-        try:
-            mummy = Investor.objects.select_related('parent').get(is_mummy=True)
-        except :
-            mummy = Investor(innocence=random.random(), experience=random.random(),charisma=random.random(),is_mummy=True,money=0,week=0,parent=None)
-            mummy.save()
-        if len(mummy.GetChildrens()) == 0:
-            if len(candidates) > 0:
-                candidates[0].parent = mummy
-            else:
-                candidate = Investor(innocence=random.random(), experience=random.random(),charisma=random.random(),is_mummy=False,money=0,week=0,parent=mummy)
-                candidate.save()
-        if len(candidates) == 0:
-            Manager.GenerateInvestors(100)
-
-        Manager().IterateTree(mummy)
+    #     candidates = Investor.objects.all().filter(parent=None).filter(is_mummy=False)
+    #     try:
+    #         mummy = Investor.objects.select_related('parent').get(is_mummy=True)
+    #     except :
+    #         mummy = Investor(innocence=random.random(), experience=random.random(),charisma=random.random(),is_mummy=True,money=0,week=0,parent=None)
+    #         mummy.save()
+    #     if len(mummy.GetChildrens()) == 0:
+    #         if len(candidates) > 0:
+    #             candidates[0].parent = mummy
+    #             candidates[0].save()
+    #         else:
+    #             candidate = Investor(innocence=random.random(), experience=random.random(),charisma=random.random(),is_mummy=False,money=0,week=0,parent=mummy)
+    #             candidate.save()
+    #     if len(candidates) == 0:
+    #         Manager.GenerateInvestors(100)
+    #
+    #     mummy = Investor(innocence=random.random(), experience=random.random(), charisma=random.random(), is_mummy=True,
+    #                      money=0, week=0, parent=None)
         investors = Investor.objects.all().filter(~Q(parent=None)).filter(is_mummy=False)
         candidates = Investor.objects.all().filter(parent=None).filter(is_mummy=False)
 
         return Response({
-            'mummyId':mummy.id,
             'totalPopulation': Investor.objects.all().filter(parent=None).count(),
             'totalMembers': Investor.objects.count(),
             'mummyMoney': Investor.objects.get(is_mummy=True).money,
@@ -57,12 +80,14 @@ class InvestorList(APIView):
             'candidates': InvestorSerializer(candidates, many=True).data
         })
 
+
     def post(self, request, format=None):
         serializer = InvestorSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class InvestorItem(APIView):
     """
